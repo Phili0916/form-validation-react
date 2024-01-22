@@ -1,18 +1,88 @@
-import {useRef} from 'react'
+import {useState} from 'react'
 import "./app.css"
 import FormInput from "./components/FormInput"
 
 const App = () => {
-    // const [username, setUsername] = useState("")
-    const usernameRef = useRef()
+    const [values, setValues] = useState({
+        username:"",
+        email:"",
+        birthday:"",
+        password:"",
+        confirmPassword:""
+    })
+
+    const inputs = [
+        {
+            id: 1,
+            name:"username",
+            type:"text",
+            placeholder:"Username",
+            errorMessage:"Username must be at least 5 characters!",
+            label:"Username",
+            pattern: "^[A-Za-z0-9]{5,}$",
+            required: true
+        },
+        {
+            id: 2,
+            name:"email",
+            type:"email",
+            placeholder:"Email",
+            errorMessage:"Valid Email is Required",
+            label:"Email",
+            required: true
+        },
+        {
+            id: 3,
+            name:"birthday",
+            type:"date",
+            placeholder:"Birthday",
+            label:"Birthday"
+        },
+        {
+            id: 4,
+            name:"password",
+            type:"password",
+            placeholder:"Password",
+            errorMessage:"Pasword must be at least 5 characters(1 uppercase letter, 1 number, and 1 special character)!",
+            label:"Password",
+            pattern:`^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,30}$`,
+            required: true
+        },
+        {
+            id: 5,
+            name:"confirmPassword",
+            type:"password",
+            placeholder:"Confirm Password",
+            errorMessage:"Passwords Must Match!",
+            label:"Confirm Password",
+            pattern: values.password, 
+            required: true
+        }
+    ]
     
+    const handleSubmit = (e) => {
+        e.preventDefault()
+    }
+
+    const onChange = (e) => {
+        setValues({...values, [e.target.name]: e.target.value})
+    }
+
+    console.log(values)
+     
     return (
         <div className="app">
-            <form>
-                <FormInput usernameRef={usernameRef} placeholder="Username" />
-                <FormInput placeholder="Email"/>
-                <FormInput placeholder="Full Name"/>
-                <FormInput placeholder="password"/>
+            <form onSubmit={handleSubmit}>
+                <h1>Register</h1>
+                {inputs.map((input)=> (
+                    <FormInput 
+                        key={input.id} 
+                            {...input} 
+                        value={values[input.name]}
+                        onChange={onChange}
+                    />
+                ))}
+                <button>Submit</button>
             </form>
         </div>
     )
